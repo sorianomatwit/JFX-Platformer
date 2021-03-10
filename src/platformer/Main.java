@@ -83,15 +83,16 @@ public class Main extends Application {
 				//obstacles
 				o.movement(-1,w);
 				o.display();
-				
+				if(p.collision(o.getX(), o.getY(), o.getWidth(),o.getHeight()) && !isCrouching) {
+					p.setFill(Color.DARKBLUE);
+				}
+				  
 				//player
 				p.display();
 				p.WorldCollide(w);
 				pane.setOnKeyPressed(keyboardCheckPressed);
 				pane.setOnKeyReleased(KeyboardCheckRelease);
-				if(p.collision(o.getX(), o.getY(), o.getWidth(),o.getHeight()) && !isCrouching) {
-					p.setFill(Color.DARKBLUE);
-				} 
+				 
 				if(isCrouching && o.collision(p.getX() - p.getWidth()/2 - 5, p.getY() + p.getHeight()/4 + 4, p.getHeight(), p.getWidth())) {
 					p.setFill(Color.HOTPINK);
 				}

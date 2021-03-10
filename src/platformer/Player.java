@@ -54,7 +54,6 @@ public class Player extends Thing implements Mover{
 		}
 		x += hsp;
 	}
-boolean already = true;
 	public void crouch(boolean isCrouch) {
 		double  tempy = getY();
 		
