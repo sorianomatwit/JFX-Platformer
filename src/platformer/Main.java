@@ -10,20 +10,23 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 public class Main extends Application {
-
+	boolean isCrouching = false;
+	
 	public static void main(String[] args) {
+		
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage arg0) throws Exception {
 		// TODO Auto-generated method stub
-
+		
 		Player p = new Player();
 		Wall w = new Wall();
 		Obstacle o = new Obstacle();
@@ -36,19 +39,24 @@ public class Main extends Application {
 		arg0.setScene(scene);
 		arg0.show();
 		pane.requestFocus();
+		w.UpdateWall(scene);
 		EventHandler<KeyEvent> keyboardCheckPressed = new EventHandler<KeyEvent>() {
 
 			// anykeypress will run this method
 			@Override
 			public void handle(KeyEvent event) {
-				if(event.getCode() == KeyCode.W && p.collision(p.getX(), p.getY()+1, w)) {
-					p.setVsp((double) -15);
-				} else if(event.getCode() == KeyCode.S) {
-					p.crouch(true);
+				if(event.getCode() == KeyCode.S) {
+					isCrouching = true;
+					p.crouch(isCrouching); 
 				}
+				if(event.getCode() == KeyCode.W && p.collision(p.getX(), p.getY()+1, w) && !isCrouching) {
+					p.setVsp((double) -15);
+				} 
+				
 				if(event.getCode() == KeyCode.D) {
 					p.movement(1, w);
-				} else if(event.getCode() == KeyCode.A) {
+				}
+				if(event.getCode() == KeyCode.A) {
 					p.movement(-1, w);
 				}
 			}
@@ -60,7 +68,8 @@ public class Main extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				if(event.getCode() == KeyCode.S) {
-					p.crouch(false);
+					isCrouching = false;
+					p.crouch(isCrouching);
 				}
 			}
 
@@ -70,18 +79,21 @@ public class Main extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				pane.setOnKeyPressed(keyboardCheckPressed);
-				//pane.setOnKeyReleased(KeyboardCheckRelease);
-				w.UpdateWall(scene);
+				
 				//obstacles
-				o.UpdateObstacle(w);
-				o.show();
+				o.movement(-1,w);
+				o.display();
 				
 				//player
 				p.display();
 				p.WorldCollide(w);
-				if(p.collision(o.getX(), o.getY(), o.getMass())) {
+				pane.setOnKeyPressed(keyboardCheckPressed);
+				pane.setOnKeyReleased(KeyboardCheckRelease);
+				if(p.collision(o.getX(), o.getY(), o.getWidth(),o.getHeight()) && !isCrouching) {
 					p.setFill(Color.DARKBLUE);
+				} 
+				if(isCrouching && o.collision(p.getX() - p.getWidth()/2 - 5, p.getY() + p.getHeight()/4 + 4, p.getHeight(), p.getWidth())) {
+					p.setFill(Color.HOTPINK);
 				}
 			}
 		};
@@ -95,7 +107,6 @@ public class Main extends Application {
 			@Override
 			public void handle(WindowEvent arg0) {
 				s.stop();
-
 			}
 		});
 
