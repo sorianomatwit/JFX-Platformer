@@ -1,5 +1,7 @@
 package platformer;
 
+import java.util.ArrayList;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -65,6 +67,13 @@ public abstract class Thing extends Rectangle {
 	public boolean collision(double x, double y, double massx, double massy) {
 		if (this.x <= x + massx && this.x + this.massx >= x 
 				&& this.y + this.massy >= y && this.y <= y + massy) {
+			return true;
+		}
+		return false;
+	}
+	public boolean collision(ArrayList<Double> p) {
+		if (this.x <= p.get(0) + p.get(2) && this.x + this.massx >= p.get(0) 
+				&& this.y + this.massy >= p.get(1) && this.y <=p.get(1) + p.get(3)) {
 			return true;
 		}
 		return false;

@@ -8,9 +8,8 @@ public class Player extends Thing implements Mover{
 
 	protected double walkspd = 6;
 	private double grv = 0.5;
-
 	public Player() {
-		super(150, 100, 30, 70);
+		super(100, 0, 20, 50);
 		color = Color.LIME;
 		this.setStrokeWidth(2);
 		this.setStroke(Color.PURPLE);
